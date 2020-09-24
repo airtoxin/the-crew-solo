@@ -1,0 +1,15 @@
+{
+  "name": "the-crew-solo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:airtoxin/the-crew-solo.git",
+  "author": "airtoxin <airtoxin@icloud.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^4.0.3"
+  }
+}
