@@ -9,3 +9,6 @@ export const shuffle = <T>([...arr]: T[]): T[] => {
   }
   return arr;
 };
+
+let id = Math.random();
+export const generateId = (): number => id + Math.random();
