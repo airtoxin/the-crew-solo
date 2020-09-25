@@ -132,17 +132,18 @@ export const gameSlice = createSlice({
       state.phase = "pickupMissionCards";
     },
 
-    pickupMissionCards: (
-      state,
-      action: PayloadAction<{ pickingMissionCard: Card }>
-    ) => {
+    pickupMissionCards: (state) => {
       if (state.phase !== "pickupMissionCards")
         throw new Error(`Invalid phase of pickupMissionCards: ${state.phase}`);
+      if (state.selectingMissionCard == null)
+        throw new Error(`Picking up mission card not selected`);
 
-      state[state.turnPlayer].missionCards.push(
-        action.payload.pickingMissionCard
-      );
+      state[state.turnPlayer].missionCards.push(state.selectingMissionCard);
       state.turnPlayer = nextTurnPlayer(state);
+      state.nonPickedMissionCards = state.nonPickedMissionCards.filter(
+        (c) => c.id !== state.selectingMissionCard.id
+      );
+      state.selectingMissionCard = undefined;
 
       if (state.nonPickedMissionCards.length === 0) {
         state.turnPlayer = state.leadPlayer;
@@ -151,32 +152,61 @@ export const gameSlice = createSlice({
       }
     },
 
-    playCard: (state, action: PayloadAction<{ playingCard: Card }>) => {
-      state.playingCards[state.turnPlayer] = action.payload.playingCard;
-      const index = state[state.turnPlayer].hands.findIndex(
-        (c) => c.id === action.payload.playingCard.id
+    playCard: (state) => {
+      state.playingCards[state.turnPlayer] = state.selectingCard;
+      state.player.hands = state.player.hands.filter(
+        (c) => c.id !== state.selectingCard.id
       );
-      state[state.turnPlayer].hands.splice(index, 1);
+      delete state.selectingCard;
 
-      if (Object.keys(state.playingCards).length === 4) {
-        // check winner and setup next trick
-        const rocketCards = (Object.entries(state.playingCards) as [
-          PlayerNames,
-          Card
-        ][]).filter(([_, card]) => card.type === "rocket");
-        if (rocketCards.length !== 0) {
-          const [winner] = findMaxBy(rocketCards, ([_, c]) => c.num);
-          state.leadPlayer = winner;
-          state.turnPlayer = winner;
-          state.tricks += 1;
-          // TODO
-        } else {
-          const leadCard = state.playingCards[state.leadPlayer];
-          // TODO
+      determineWinnerMutation(state);
+    },
+
+    playCardByDrone: (state) => {
+      const turnDrone = state.turnPlayer;
+      const leadCard = state.playingCards[state.leadPlayer];
+      const hands = state[turnDrone].hands;
+
+      switch (turnDrone) {
+        case "dewey": {
+          const card = hands.find((c) => c.type === leadCard?.type) || hands[0];
+          state.playingCards.dewey = card;
+          state.dewey.hands = hands.filter((c) => c.id !== card.id);
+          break;
         }
-      } else {
-        state.turnPlayer = nextTurnPlayer(state);
+        case "huey": {
+          const card = hands.find((c) => c.type === leadCard?.type)
+            ? findMaxBy(
+                hands.filter((c) => c.type === leadCard?.type),
+                (c) => c.num
+              )
+            : findMaxBy(hands, (c) => c.num);
+          state.playingCards.huey = card;
+          state.huey.hands = hands.filter((c) => c.id !== card.id);
+          break;
+        }
+        case "louie": {
+          const card = hands.find((c) => c.type === leadCard?.type)
+            ? findMaxBy(
+                hands.filter((c) => c.type === leadCard?.type),
+                (c) => -c.num
+              )
+            : findMaxBy(hands, (c) => -c.num);
+          state.playingCards.louie = card;
+          state.louie.hands = hands.filter((c) => c.id !== card.id);
+          break;
+        }
+        case "player": {
+          throw new Error(
+            "Expect drone's turn but actually called at player's turn"
+          );
+        }
+        default: {
+          assertUnreachable(turnDrone);
+        }
       }
+
+      determineWinnerMutation(state);
     },
 
     selectCard: (state, action: PayloadAction<{ card?: Card }>) => {
@@ -214,4 +244,29 @@ const findMaxBy = <T>(items: T[], maxBy: (item: T) => number): T => {
   }
 
   return maxItem;
+};
+
+const determineWinnerMutation = (state: GameState) => {
+  if (Object.keys(state.playingCards).length === 4) {
+    // check winner and setup next trick
+    const cards = Object.entries(state.playingCards) as [PlayerNames, Card][];
+    const rocketCards = cards.filter(([_, card]) => card.type === "rocket");
+    let winner: PlayerNames;
+    if (rocketCards.length !== 0) {
+      [winner] = findMaxBy(rocketCards, ([_, c]) => c.num);
+    } else {
+      const leadCard = state.playingCards[state.leadPlayer];
+      const followedCards = cards.filter(
+        ([_, card]) => card.type === leadCard.type
+      );
+      [winner] = findMaxBy(followedCards, ([_, c]) => c.num);
+    }
+    console.log("@winner", winner);
+    state.leadPlayer = winner;
+    state.turnPlayer = winner;
+    state.tricks += 1;
+    state.playingCards = {};
+  } else {
+    state.turnPlayer = nextTurnPlayer(state);
+  }
 };

@@ -1,36 +1,57 @@
-import React, { useMemo } from "react";
+import React, { useEffect } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { PlayerNames } from "../the-crew/game";
+import { gameSlice, PlayerNames } from "../the-crew/game";
 import { Hands } from "./Hands";
-import { assertUnreachable } from "../utils";
-import { getSequentialNum } from "../the-crew/card";
 import { useCommanderName } from "../hooks/useCommanderName";
+import { MissionCards } from "./MissionCards";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 
 export const Player: React.FunctionComponent<{
   name: PlayerNames;
 }> = ({ name }) => {
-  const player = useAppSelector((s) => s.game[name]);
+  const dispatch = useAppDispatch();
+  const phase = useAppSelector((s) => s.game.phase);
+  const missionCards = useAppSelector((s) => s.game[name].missionCards);
+  const turnPlayer = useAppSelector((s) => s.game.turnPlayer);
   const commanderName = useCommanderName();
-  const hands = useMemo(() => {
-    switch (name) {
-      case "dewey":
-        return player.hands;
-      case "player":
-      case "huey":
-      case "louie":
-        return player.hands
-          .slice()
-          .sort((a, b) => getSequentialNum(a) - getSequentialNum(b));
+  const nonPickedMissionCards = useAppSelector(
+    (s) => s.game.nonPickedMissionCards
+  );
+  const tricks = useAppSelector((s) => s.game.tricks);
+
+  useEffect(() => {
+    if (
+      name !== "player" &&
+      phase === "pickupMissionCards" &&
+      turnPlayer === name
+    ) {
+      setTimeout(() => {
+        dispatch(
+          gameSlice.actions.selectMissionCard({
+            card: nonPickedMissionCards[0],
+          })
+        );
+        dispatch(gameSlice.actions.pickupMissionCards());
+      }, 1000);
     }
-    assertUnreachable(name);
-  }, [name, player.hands]);
+  }, [name, phase, turnPlayer, nonPickedMissionCards]);
+
+  useEffect(() => {
+    if (name !== "player" && phase === "started" && turnPlayer === name) {
+      setTimeout(() => {
+        dispatch(gameSlice.actions.playCardByDrone());
+      }, 1000);
+    }
+  }, [name, phase, turnPlayer, tricks]);
 
   return (
     <div>
       <h3>
-        {name} <span>{commanderName === name && "(Commander)"}</span>
+        {turnPlayer === name && "*"} {name}{" "}
+        <span>{commanderName === name && "(Commander)"}</span>
       </h3>
-      <Hands hands={hands} />
+      <Hands name={name} />
+      <MissionCards missionCards={missionCards} />
     </div>
   );
 };
