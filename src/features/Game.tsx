@@ -18,10 +18,15 @@ export const Game: React.FunctionComponent = () => {
 
       {(phase === "swappingCommander" || phase === "pickupMissionCards") && (
         <>
-          <h2>Select Mission Cards</h2>
+          {phase === "pickupMissionCards" && <h2>Select Mission Cards</h2>}
           <div style={{ display: "flex" }}>
             {nonPickedMissionCards.map((card) => (
-              <Card key={card.id} card={card} isMissionCard />
+              <Card
+                key={card.id}
+                card={card}
+                isMissionCard
+                noInteraction={phase !== "pickupMissionCards"}
+              />
             ))}
           </div>
         </>

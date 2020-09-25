@@ -8,7 +8,7 @@ export const MissionCards: React.FunctionComponent<{
   return (
     <div style={{ display: "flex" }}>
       {missionCards.map((card) => (
-        <Card key={card.id} card={card} isMissionCard />
+        <Card key={card.id} card={card} isMissionCard noInteraction />
       ))}
     </div>
   );
