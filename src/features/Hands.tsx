@@ -1,9 +1,12 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import React, { useMemo } from "react";
 import { getSequentialNum } from "../the-crew/card";
 import { Card } from "./Card";
 import { assertUnreachable } from "../utils";
 import { PlayerNames } from "../the-crew/game";
 import { useAppSelector } from "../hooks/useAppSelector";
+import { CARD_WIDTH } from "../constants";
 
 export const Hands: React.FunctionComponent<{ name: PlayerNames }> = ({
   name,
@@ -24,9 +27,16 @@ export const Hands: React.FunctionComponent<{ name: PlayerNames }> = ({
   }, [name, player.hands]);
 
   return (
-    <div style={{ display: "flex" }}>
-      {hands.map((card) => (
-        <Card key={card.id} card={card} />
+    <div css={{ display: "flex" }}>
+      {hands.map((card, i) => (
+        <div
+          css={{
+            transform: `translate(${i * -(CARD_WIDTH / 2)}px, 0)`,
+          }}
+          key={card.id}
+        >
+          <Card card={card} />
+        </div>
       ))}
     </div>
   );

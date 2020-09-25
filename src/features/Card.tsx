@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import React, { useMemo } from "react";
 import type { Card as CardType } from "../the-crew/card";
 // @ts-expect-error
@@ -6,6 +8,12 @@ import { getSequentialNum } from "../the-crew/card";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { gameSlice } from "../the-crew/game";
 import { useAppSelector } from "../hooks/useAppSelector";
+import {
+  CARD_HEIGHT,
+  CARD_SPRITE_HEIGHT,
+  CARD_SPRITE_WIDTH,
+  CARD_WIDTH,
+} from "../constants";
 
 export const Card: React.FunctionComponent<{
   card: CardType;
@@ -25,17 +33,20 @@ export const Card: React.FunctionComponent<{
 
   const scale = useMemo(() => (isMissionCard ? 0.6 : 1), [isMissionCard]);
 
-  const IMAGE_WIDTH = 1200 * scale;
-  const IMAGE_HEIGHT = 747 * scale;
-  const CARD_WIDTH = IMAGE_WIDTH / 10;
-  const CARD_HEIGHT = IMAGE_HEIGHT / 4;
+  const scaledSpriteWidth = CARD_SPRITE_WIDTH * scale;
+  const scaledSpriteHeight = CARD_SPRITE_HEIGHT * scale;
+  const scaledCardWidth = CARD_WIDTH * scale;
+  const scaledCardHeight = CARD_HEIGHT * scale;
 
-  const xOffset = (seq % 10) * -CARD_WIDTH;
-  const yOffset = Math.floor(seq / 10) * -CARD_HEIGHT;
+  const xOffset = (seq % 10) * -scaledCardWidth;
+  const yOffset = Math.floor(seq / 10) * -scaledCardHeight;
 
   return (
     <div
-      style={{ position: "relative" }}
+      css={{
+        position: "relative",
+        "&:hover": { transform: "translate(0, -10px)" },
+      }}
       onClick={() =>
         dispatch(
           (isMissionCard
@@ -48,20 +59,20 @@ export const Card: React.FunctionComponent<{
     >
       {isSelected && (
         <div
-          style={{
+          css={{
             position: "absolute",
-            width: CARD_WIDTH,
-            height: CARD_HEIGHT,
+            width: scaledCardWidth,
+            height: scaledCardHeight,
             backgroundColor: "rgb(255 255 255 / 43%)",
           }}
         />
       )}
       <div
-        style={{
-          width: CARD_WIDTH,
-          height: CARD_HEIGHT,
+        css={{
+          width: scaledCardWidth,
+          height: scaledCardHeight,
           backgroundImage: `url(${cardsSrc})`,
-          backgroundSize: `${IMAGE_WIDTH}px ${IMAGE_HEIGHT}px`,
+          backgroundSize: `${scaledSpriteWidth}px ${scaledSpriteHeight}px`,
           backgroundPositionX: xOffset,
           backgroundPositionY: yOffset,
         }}
