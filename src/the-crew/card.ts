@@ -19,10 +19,18 @@ export const missionCards: Card[] = ([
   }))
 );
 
-export const allCards: Card[] = missionCards.concat(
-  range(4, 1).map((num) => ({
-    id: generateId(),
-    type: "rocket" as const,
-    num,
-  }))
-);
+export const rocket4Card: Card = {
+  id: generateId(),
+  type: "rocket" as const,
+  num: 4,
+};
+
+export const allCards: Card[] = missionCards
+  .concat(
+    range(3, 1).map((num) => ({
+      id: generateId(),
+      type: "rocket" as const,
+      num,
+    }))
+  )
+  .concat([rocket4Card]);

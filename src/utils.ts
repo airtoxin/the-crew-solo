@@ -12,3 +12,7 @@ export const shuffle = <T>([...arr]: T[]): T[] => {
 
 let id = Math.random();
 export const generateId = (): number => id + Math.random();
+
+export const assertUnreachable = (x: never) => {
+  throw new Error(`Expected never type but got: ${x}`);
+};
