@@ -1,4 +1,5 @@
-import { allCards } from "./the-crew/card";
-import { shuffle } from "./utils";
+import React from "react";
+import { render } from "react-dom";
+import { App } from "./App";
 
-document.body.innerText = JSON.stringify(shuffle(allCards), null, 2);
+render(<App />, document.getElementById("app"));

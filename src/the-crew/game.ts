@@ -12,6 +12,8 @@ export type GameState = {
     | "started"
     | "end";
   tricks: number;
+  selectingCard?: Card;
+  selectingMissionCard?: Card;
   nonPickedMissionCards: Card[];
   commander: PlayerNames;
   leadPlayer: PlayerNames;
@@ -102,21 +104,23 @@ export const gameSlice = createSlice({
       state.turnPlayer = state.commander;
     },
 
-    swapCommander: (state, action: PayloadAction<{ swappingCard: Card }>) => {
+    swapCommander: (state) => {
       if (state.commander === "player")
         throw new Error(
           "can't swap commander because player already been commander"
         );
+      if (state.selectingCard == null)
+        throw new Error("Swapping card not selected");
 
       const index = state[state.commander].hands.findIndex(
         (c) => c.id === rocket4Card.id
       );
-      state[state.commander].hands.splice(
-        index,
-        1,
-        action.payload.swappingCard
-      );
+      state[state.commander].hands.splice(index, 1, state.selectingCard);
       state.player.hands.push(rocket4Card);
+      state.player.hands = state.player.hands.filter(
+        (c) => c.id !== state.selectingCard.id
+      );
+
       state.commander = "player";
       state.leadPlayer = "player";
       state.turnPlayer = "player";
@@ -173,6 +177,14 @@ export const gameSlice = createSlice({
       } else {
         state.turnPlayer = nextTurnPlayer(state);
       }
+    },
+
+    selectCard: (state, action: PayloadAction<{ card?: Card }>) => {
+      state.selectingCard = action.payload.card;
+    },
+
+    selectMissionCard: (state, action: PayloadAction<{ card?: Card }>) => {
+      state.selectingMissionCard = action.payload.card;
     },
   },
 });
