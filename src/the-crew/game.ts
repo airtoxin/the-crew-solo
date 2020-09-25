@@ -261,7 +261,6 @@ const determineWinnerMutation = (state: GameState) => {
       );
       [winner] = findMaxBy(followedCards, ([_, c]) => c.num);
     }
-    console.log("@winner", winner);
     state.leadPlayer = winner;
     state.turnPlayer = winner;
     state.tricks += 1;

@@ -3,6 +3,7 @@ import { Player } from "./Player";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Card } from "./Card";
 import { DebugDispatcher } from "./DebugDispatcher";
+import { PlayingCards } from "./PlayingCards";
 
 export const Game: React.FunctionComponent = () => {
   const phase = useAppSelector((s) => s.game.phase);
@@ -25,6 +26,8 @@ export const Game: React.FunctionComponent = () => {
           </div>
         </>
       )}
+
+      <PlayingCards />
 
       <Player name={"player"} />
       <Player name={"dewey"} />

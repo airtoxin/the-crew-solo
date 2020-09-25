@@ -6,6 +6,8 @@ import { useCommanderName } from "../hooks/useCommanderName";
 import { MissionCards } from "./MissionCards";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 
+const DRONE_SPEED = 10;
+
 export const Player: React.FunctionComponent<{
   name: PlayerNames;
 }> = ({ name }) => {
@@ -32,23 +34,29 @@ export const Player: React.FunctionComponent<{
           })
         );
         dispatch(gameSlice.actions.pickupMissionCards());
-      }, 1000);
+      }, DRONE_SPEED);
     }
   }, [name, phase, turnPlayer, nonPickedMissionCards]);
 
   useEffect(() => {
-    if (name !== "player" && phase === "started" && turnPlayer === name) {
+    if (
+      name !== "player" &&
+      phase === "started" &&
+      turnPlayer === name &&
+      tricks <= 10
+    ) {
       setTimeout(() => {
         dispatch(gameSlice.actions.playCardByDrone());
-      }, 1000);
+      }, DRONE_SPEED);
     }
   }, [name, phase, turnPlayer, tricks]);
 
   return (
     <div>
       <h3>
-        {turnPlayer === name && "*"} {name}{" "}
+        {name}
         <span>{commanderName === name && "(Commander)"}</span>
+        <span>{turnPlayer === name && "(TurnPlayer)"} </span>
       </h3>
       <Hands name={name} />
       <MissionCards missionCards={missionCards} />
