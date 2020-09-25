@@ -1,4 +1,4 @@
-import { generateId, range } from "../utils";
+import { assertUnreachable, generateId, range } from "../utils";
 
 export type Card = {
   id: number;
@@ -34,3 +34,19 @@ export const allCards: Card[] = missionCards
     }))
   )
   .concat([rocket4Card]);
+
+export const getSequentialNum = (card: Card): number => {
+  switch (card.type) {
+    case "rocket":
+      return card.num - 1;
+    case "blue":
+      return 4 + card.num - 1;
+    case "green":
+      return 4 + 9 + card.num - 1;
+    case "red":
+      return 4 + 9 + 9 + card.num - 1;
+    case "yellow":
+      return 4 + 9 + 9 + 9 + card.num - 1;
+  }
+  assertUnreachable(card.type);
+};
