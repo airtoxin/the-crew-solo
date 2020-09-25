@@ -18,7 +18,8 @@ import {
 export const Card: React.FunctionComponent<{
   card: CardType;
   isMissionCard?: boolean;
-}> = ({ card, isMissionCard = false }) => {
+  noInteraction?: boolean;
+}> = ({ card, isMissionCard = false, noInteraction = false }) => {
   const dispatch = useAppDispatch();
   const selectingCard = useAppSelector((s) => s.game.selectingCard);
   const selectingMissionCard = useAppSelector(
@@ -45,9 +46,10 @@ export const Card: React.FunctionComponent<{
     <div
       css={{
         position: "relative",
-        "&:hover": { transform: "translate(0, -10px)" },
+        "&:hover": noInteraction ? {} : { transform: "translate(0, -10px)" },
       }}
       onClick={() =>
+        !noInteraction &&
         dispatch(
           (isMissionCard
             ? gameSlice.actions.selectMissionCard
@@ -57,7 +59,7 @@ export const Card: React.FunctionComponent<{
         )
       }
     >
-      {isSelected && (
+      {!noInteraction && isSelected && (
         <div
           css={{
             position: "absolute",

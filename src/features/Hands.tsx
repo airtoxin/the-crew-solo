@@ -35,7 +35,7 @@ export const Hands: React.FunctionComponent<{ name: PlayerNames }> = ({
           }}
           key={card.id}
         >
-          <Card card={card} />
+          <Card card={card} noInteraction={name !== "player"} />
         </div>
       ))}
     </div>
