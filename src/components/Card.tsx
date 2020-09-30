@@ -17,9 +17,15 @@ import {
 
 export const Card: React.FunctionComponent<{
   card: CardType;
+  withHighlight?: boolean;
   isMissionCard?: boolean;
   noInteraction?: boolean;
-}> = ({ card, isMissionCard = false, noInteraction = false }) => {
+}> = ({
+  card,
+  withHighlight = false,
+  isMissionCard = false,
+  noInteraction = false,
+}) => {
   const dispatch = useAppDispatch();
   const selectingCard = useAppSelector((s) => s.game.selectingCard);
   const selectingMissionCard = useAppSelector(
@@ -59,13 +65,13 @@ export const Card: React.FunctionComponent<{
         )
       }
     >
-      {!noInteraction && isSelected && (
+      {withHighlight && (
         <div
           css={{
             position: "absolute",
             width: scaledCardWidth,
             height: scaledCardHeight,
-            backgroundColor: "rgb(255 255 255 / 43%)",
+            backgroundColor: "rgb(255 255 255 / 70%)",
           }}
         />
       )}

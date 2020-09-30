@@ -1,7 +1,9 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import React from "react";
 import { Player } from "./Player";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { Card } from "./Card";
+import { Card } from "../components/Card";
 import { DebugDispatcher } from "./DebugDispatcher";
 import { PlayingCards } from "./PlayingCards";
 
@@ -12,12 +14,20 @@ export const Game: React.FunctionComponent = () => {
   );
 
   return (
-    <div>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        color: "white",
+      }}
+    >
       <h2>{phase}</h2>
       <DebugDispatcher />
 
       {(phase === "swappingCommander" || phase === "pickupMissionCards") && (
-        <>
+        <React.Fragment>
           {phase === "pickupMissionCards" && <h2>Select Mission Cards</h2>}
           <div style={{ display: "flex" }}>
             {nonPickedMissionCards.map((card) => (
@@ -29,7 +39,7 @@ export const Game: React.FunctionComponent = () => {
               />
             ))}
           </div>
-        </>
+        </React.Fragment>
       )}
 
       <PlayingCards />

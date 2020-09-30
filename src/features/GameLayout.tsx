@@ -1,7 +1,9 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { css, Global, jsx } from "@emotion/core";
 import React from "react";
 import { useDocumentBodySize } from "../hooks/useDocumentBodySize";
+// @ts-expect-error
+import galaxySrc from "../files/galaxy-1837306_1920.jpg";
 
 const GAME_WIDTH = 1600;
 const GAME_HEIGHT = 900;
@@ -19,6 +21,20 @@ export const GameLayout: React.FunctionComponent = ({ children }) => {
         transform: `scale(${scale})`,
       }}
     >
+      <Global
+        styles={css({
+          "html,body,#app": {
+            width: "100vw",
+            height: "100vh",
+            margin: 0,
+          },
+          "#app": {
+            display: "flex",
+            flexDirection: "column",
+            backgroundImage: `url(${galaxySrc})`,
+          },
+        })}
+      />
       {children}
     </div>
   );

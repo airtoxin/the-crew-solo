@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { Card } from "./Card";
+import { Card } from "../components/Card";
 
 export const PlayingCards: React.FunctionComponent = () => {
   const leadPlayer = useAppSelector((s) => s.game.leadPlayer);

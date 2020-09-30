@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { gameSlice, PlayerNames } from "../the-crew/game";
 import { Hands } from "./Hands";
 import { useCommanderName } from "../hooks/useCommanderName";
 import { MissionCards } from "./MissionCards";
 import { useAppDispatch } from "../hooks/useAppDispatch";
+import { getSequentialNum } from "../the-crew/card";
+import { assertUnreachable } from "../utils";
 
 const DRONE_SPEED = 10;
 
@@ -20,6 +22,21 @@ export const Player: React.FunctionComponent<{
     (s) => s.game.nonPickedMissionCards
   );
   const tricks = useAppSelector((s) => s.game.tricks);
+
+  const player = useAppSelector((s) => s.game[name]);
+  const hands = useMemo(() => {
+    switch (name) {
+      case "dewey":
+        return player.hands;
+      case "player":
+      case "huey":
+      case "louie":
+        return player.hands
+          .slice()
+          .sort((a, b) => getSequentialNum(a) - getSequentialNum(b));
+    }
+    assertUnreachable(name);
+  }, [name, player.hands]);
 
   useEffect(() => {
     if (
@@ -58,7 +75,7 @@ export const Player: React.FunctionComponent<{
         <span>{commanderName === name && "(Commander)"}</span>
         <span>{turnPlayer === name && "(TurnPlayer)"} </span>
       </h3>
-      <Hands name={name} />
+      <Hands cards={hands} noInteraction={name !== "player"} />
       <MissionCards missionCards={missionCards} />
     </div>
   );

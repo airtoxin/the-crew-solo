@@ -1,6 +1,6 @@
 import React from "react";
 import { Card as CardType } from "../the-crew/card";
-import { Card } from "./Card";
+import { Card } from "../components/Card";
 
 export const MissionCards: React.FunctionComponent<{
   missionCards: CardType[];
