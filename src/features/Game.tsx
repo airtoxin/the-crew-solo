@@ -12,6 +12,9 @@ export const Game: React.FunctionComponent = () => {
   const nonPickedMissionCards = useAppSelector(
     (s) => s.game.nonPickedMissionCards
   );
+  const selectingMissionCard = useAppSelector(
+    (s) => s.game.selectingMissionCard
+  );
 
   return (
     <div
@@ -35,6 +38,7 @@ export const Game: React.FunctionComponent = () => {
                 key={card.id}
                 card={card}
                 isMissionCard
+                withHighlight={card.id === selectingMissionCard?.id}
                 noInteraction={phase !== "pickupMissionCards"}
               />
             ))}
