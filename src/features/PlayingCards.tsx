@@ -15,7 +15,7 @@ export const PlayingCards: React.FunctionComponent = () => {
             {name}
             {leadCard?.id === card?.id && <span>(Lead)</span>}
           </div>
-          {card && <Card card={card} />}
+          {card && <Card card={card} noInteraction />}
         </div>
       ))}
     </div>
