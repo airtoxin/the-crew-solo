@@ -46,12 +46,48 @@ export const Game: React.FunctionComponent = () => {
         </React.Fragment>
       )}
 
-      <PlayingCards />
+      <PlayingCards
+        css={{ position: "absolute", transform: "translate(650px, 500px);" }}
+      />
 
-      <Player name={"player"} />
-      <Player name={"dewey"} />
-      <Player name={"huey"} />
-      <Player name={"louie"} />
+      <Player
+        name={"player"}
+        css={{
+          position: "absolute",
+          transformOrigin: "top left",
+          top: 800,
+          left: 500,
+        }}
+      />
+      <Player
+        name={"dewey"}
+        css={{
+          position: "absolute",
+          transformOrigin: "top left",
+          top: 300,
+          left: 400,
+          transform: "rotate(90deg)",
+        }}
+      />
+      <Player
+        name={"huey"}
+        css={{
+          position: "absolute",
+          transformOrigin: "top left",
+          top: 0,
+          left: 500,
+        }}
+      />
+      <Player
+        name={"louie"}
+        css={{
+          position: "absolute",
+          transformOrigin: "top left",
+          bottom: 0,
+          left: 1200,
+          transform: "rotate(-90deg)",
+        }}
+      />
     </div>
   );
 };

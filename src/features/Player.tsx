@@ -12,7 +12,8 @@ const DRONE_SPEED = 10;
 
 export const Player: React.FunctionComponent<{
   name: PlayerNames;
-}> = ({ name }) => {
+  className?: string;
+}> = ({ name, className }) => {
   const dispatch = useAppDispatch();
   const phase = useAppSelector((s) => s.game.phase);
   const missionCards = useAppSelector((s) => s.game[name].missionCards);
@@ -69,7 +70,7 @@ export const Player: React.FunctionComponent<{
   }, [name, phase, turnPlayer, tricks]);
 
   return (
-    <div>
+    <div className={className}>
       <h3>
         {name}
         <span>{commanderName === name && "(Commander)"}</span>

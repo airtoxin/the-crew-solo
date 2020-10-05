@@ -6,7 +6,7 @@ import { useDocumentBodySize } from "../hooks/useDocumentBodySize";
 import galaxySrc from "../files/galaxy-1837306_1920.jpg";
 
 const GAME_WIDTH = 1600;
-const GAME_HEIGHT = 900;
+const GAME_HEIGHT = 1200;
 
 export const GameLayout: React.FunctionComponent = ({ children }) => {
   const { clientWidth, clientHeight } = useDocumentBodySize();
@@ -15,6 +15,7 @@ export const GameLayout: React.FunctionComponent = ({ children }) => {
   return (
     <div
       css={{
+        position: "relative",
         width: GAME_WIDTH,
         height: GAME_HEIGHT,
         transformOrigin: "left top",
