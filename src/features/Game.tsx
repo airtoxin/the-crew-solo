@@ -32,7 +32,15 @@ export const Game: React.FunctionComponent = () => {
       {(phase === "swappingCommander" || phase === "pickupMissionCards") && (
         <React.Fragment>
           {phase === "pickupMissionCards" && <h2>Select Mission Cards</h2>}
-          <div style={{ display: "flex" }}>
+          <div
+            css={{
+              display: "flex",
+              position: "absolute",
+              transformOrigin: "top left",
+              top: 550,
+              left: 600,
+            }}
+          >
             {nonPickedMissionCards.map((card) => (
               <Card
                 key={card.id}
@@ -57,6 +65,7 @@ export const Game: React.FunctionComponent = () => {
           transformOrigin: "top left",
           top: 800,
           left: 500,
+          width: 700,
         }}
       />
       <Player
@@ -66,6 +75,7 @@ export const Game: React.FunctionComponent = () => {
           transformOrigin: "top left",
           top: 300,
           left: 400,
+          width: 700,
           transform: "rotate(90deg)",
         }}
       />
@@ -76,6 +86,8 @@ export const Game: React.FunctionComponent = () => {
           transformOrigin: "top left",
           top: 0,
           left: 500,
+          width: 700,
+          transform: "translate(550px, 400px) rotate(180deg)",
         }}
       />
       <Player
@@ -85,6 +97,7 @@ export const Game: React.FunctionComponent = () => {
           transformOrigin: "top left",
           bottom: 0,
           left: 1200,
+          width: 700,
           transform: "rotate(-90deg)",
         }}
       />
